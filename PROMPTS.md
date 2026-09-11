@@ -1108,22 +1108,57 @@ Not done, as instructed: nothing past Phase 4, and the real review workflow was 
 
 ---
 
-## Prompt 10 — <not yet run>
+## Finalization and Submission Prompts
 
-- **Date:**
-- **Phase:**
-- **Goal:**
+- **Date:** 2026-09-11
+- **Phase:** Finalization — multi-format processing, live verification, documentation, workflow export
+- **Goal:** Close the DOCX/TXT gap, verify the complete system against the real n8n workflows, and prepare the repository for submission.
 
-### Prompt (verbatim)
+### n8n Workflow A — multi-format processing
 
-> 
+Upstream work in n8n. No application business logic was added.
 
-### Result
+- **PDF, DOCX and TXT processed end-to-end.** Closes the item carried since Prompt 2 (SPEC.md §5.1.1, §8.2).
+- **Switch routing by MIME type.** A Switch node routes on `$binary.data.mimeType`: `application/pdf` → PDF, `text/plain` → TXT, `application/vnd.openxmlformats-officedocument.wordprocessingml.document` → DOCX.
+- **TXT extraction.** A dedicated Extract from File (text) node.
+- **DOCX conversion.** The file is uploaded to Google Drive as a Google Doc (resumable upload) and exported as `text/plain` through the Drive export API. The text then follows the same AI extraction path as PDF and TXT.
 
-### Files touched
+### Verification with the real application
 
-### Decisions
+Run through the real application against the real n8n workflows, Google Sheets, Google Drive and Gmail:
 
-### Deviations
+| Test | Result |
+|------|--------|
+| PDF processing | Passed |
+| DOCX conversion and processing | Passed |
+| TXT processing | Passed |
+| Normal notification | Passed |
+| Urgent notification | Passed |
+| Dashboard loading | Passed |
+| Review write-back to Google Sheets | Passed |
 
-### Follow-ups
+### Application and documentation updates
+
+- **File picker:** `accept` changed to `.pdf,.docx,.txt` (extensions only) so DOCX and TXT files are selectable. Client-side validation is unchanged.
+- **Verification status:** `verifiedUpstream` set for DOCX and TXT in `src/constants/uploads.js`; the Upload screen now reads "PDF, DOCX and TXT are supported and verified end-to-end."
+- **README.md** rewritten as the final project README: overview, formats, features, workflows, endpoints, security, setup, verified tests, documentation index.
+- **SPEC.md** updated to the implemented state: status header, §5.1.1 DOCX/TXT verified, §7 verification item ticked, §8.1 and §8.2 closed.
+
+### n8n workflow exports
+
+- **Exported:** Workflows A, B and C into `workflows/`.
+- **Sanitized:** personal notification email addresses → `YOUR_NOTIFICATION_EMAIL@example.com`; Google Sheet IDs → `YOUR_GOOGLE_SHEET_ID`; the Google Drive folder ID → `YOUR_GOOGLE_DRIVE_FOLDER_ID`; Google `cachedResultUrl` values emptied. 13 values in total. Webhook paths, node names, expressions, logic, column mappings, HTTP methods and credential types are unchanged, and all three files are valid JSON.
+
+### Upload endpoint
+
+`/webhook/process-document-v2` remains the active Workflow A endpoint and is documented in README.md as the current implementation path. It is defined once, in `server/config.js` (`N8N_PATHS.processDocument`), so moving to `/webhook/process-document` stays a one-line server change.
+
+### Final automated checks
+
+| Check | Result |
+|-------|--------|
+| `npm run lint` | Passed |
+| `npm run build` | Passed |
+| Automated checks | 83/83 passed |
+
+The 83 checks cover upload acceptance (file picker and drag-and-drop), the upload-screen verification note, mock-mode review, the `POST /api/review` proxy, the live-mode review flow and recovery when the Express server is stopped. They run in mock mode or against a local stand-in for n8n. The real workflows were verified through the manual end-to-end tests above.
