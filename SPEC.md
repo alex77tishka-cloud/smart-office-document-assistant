@@ -1,7 +1,7 @@
 # SPEC.md — Smart Office Document Assistant (Application Layer)
 
-Status: draft v1.1 — specification only, no application code written yet.
-Last updated: 2026-09-10 (Prompt 2: confirmed auth header, upload types, review 404, legacy Document ID)
+Status: v1.2 — implemented. The application described here is built (`src/`, `server/`) and connected to n8n Workflows A, B and C; all four build phases (§6) are complete.
+Last updated: 2026-09-11 (status reflects the implemented application; DOCX/TXT verified end-to-end, §5.1.1)
 
 ---
 
@@ -168,16 +168,16 @@ Rules:
 | Type | Extension | MIME type | Upstream status |
 |------|-----------|-----------|-----------------|
 | PDF | `.pdf` | `application/pdf` | ✅ Verified end-to-end in n8n Workflow A. |
-| Word | `.docx` | `application/vnd.openxmlformats-officedocument.wordprocessingml.document` | ⚠️ Not yet verified upstream. |
-| Plain text | `.txt` | `text/plain` | ⚠️ Not yet verified upstream. |
+| Word | `.docx` | `application/vnd.openxmlformats-officedocument.wordprocessingml.document` | ✅ Verified end-to-end in n8n Workflow A. |
+| Plain text | `.txt` | `text/plain` | ✅ Verified end-to-end in n8n Workflow A. |
 
-**Known gap — must be closed before final submission:** n8n Workflow A has so far only been verified with **PDF**. DOCX and TXT extraction is unproven upstream, and completing that support is a required deliverable.
+**Verified (2026-09-11):** all three formats have been tested end-to-end through the real application and the real n8n workflows. The earlier gap — Workflow A verified with PDF only — is closed.
 
 Application-side consequences:
 
-- The app accepts all three types now. The gap is upstream, and the app must not compensate for it with its own parsing — that would be reimplementing n8n logic (NG-1).
+- The app accepts all three types and never parses them itself — text extraction and DOCX conversion happen in n8n (NG-1).
 - The accepted-type list lives in **one** shared constant, used by the file picker `accept` attribute, the drag-and-drop validator and the pre-send check.
-- Until DOCX/TXT are verified, the upload UI shows a non-blocking note that those two types are still being validated end-to-end, so a processing failure is legible rather than mysterious.
+- The upload UI states that PDF, DOCX and TXT are supported and verified end-to-end.
 - A DOCX or TXT upload that fails upstream must surface as a normal readable error (`UPSTREAM_ERROR`), never as a crash or a silent no-op.
 
 ### 5.2 Dashboard
@@ -266,7 +266,7 @@ Mock data must stay in the repo after Phase 2 so the UI remains developable with
 - [ ] Errors are readable and never leak upstream internals.
 - [ ] The auth header name `x-api-key` is set server-side only; the key value appears nowhere in the repo.
 - [ ] PDF, DOCX and TXT are accepted, from a single shared constant.
-- [ ] DOCX/TXT verified end-to-end in n8n Workflow A **(required before final submission — open)**.
+- [x] DOCX/TXT verified end-to-end in n8n Workflow A (verified 2026-09-11).
 - [ ] Review is unavailable, with an explanation, for rows with an empty `Document ID`.
 - [ ] A review for an unknown `Document ID` renders the 404 case readably.
 
@@ -287,10 +287,10 @@ Track here; do not guess in code.
 | Was | Answer |
 |-----|--------|
 | Auth header name | `x-api-key` (§2.3). |
-| Supported upload types | PDF, DOCX, TXT — PDF verified upstream, DOCX/TXT pending (§5.1.1). |
+| Supported upload types | PDF, DOCX, TXT — all three verified end-to-end (§5.1.1; DOCX/TXT verified 2026-09-11). |
 | `Document ID` population | Present on all new Workflow A records; empty on some legacy rows (§5.4.1). |
 | Review of an unknown id | n8n/proxy returns 404 (CONTRACT.md §1.C, §5). |
 
 ### 8.2 Carried work items
 
-- **Complete DOCX and TXT support in n8n Workflow A before final submission.** Upstream task, tracked here because the app's accepted-type list depends on it.
+- ~~Complete DOCX and TXT support in n8n Workflow A before final submission.~~ **Done (2026-09-11):** DOCX and TXT verified end-to-end (§5.1.1).

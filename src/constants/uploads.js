@@ -15,14 +15,15 @@ export const ACCEPTED_FILE_TYPES = [
     extension: '.docx',
     mimeType:
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    // Accepted by the app; not yet verified upstream (SPEC.md 8.2).
-    verifiedUpstream: false,
+    // Verified end-to-end in n8n Workflow A.
+    verifiedUpstream: true,
   },
   {
     label: 'Plain text',
     extension: '.txt',
     mimeType: 'text/plain',
-    verifiedUpstream: false,
+    // Verified end-to-end in n8n Workflow A.
+    verifiedUpstream: true,
   },
 ]
 

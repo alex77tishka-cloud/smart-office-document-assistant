@@ -28,17 +28,17 @@
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "1dke-q-4Uh8iwlql462iO2uQBdVDtM5k0LnKNP_WwpjY",
+          "value": "YOUR_GOOGLE_SHEET_ID",
           "mode": "list",
           "cachedResultName": "TE_Sales_Opportunity_Document_Log",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dke-q-4Uh8iwlql462iO2uQBdVDtM5k0LnKNP_WwpjY/edit?usp=drivesdk"
+          "cachedResultUrl": ""
         },
         "sheetName": {
           "__rl": true,
           "value": 228710658,
           "mode": "list",
           "cachedResultName": "Customer Request Log",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dke-q-4Uh8iwlql462iO2uQBdVDtM5k0LnKNP_WwpjY/edit#gid=228710658"
+          "cachedResultUrl": ""
         },
         "options": {}
       },

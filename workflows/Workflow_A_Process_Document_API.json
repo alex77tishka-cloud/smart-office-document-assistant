@@ -147,17 +147,17 @@
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "1dke-q-4Uh8iwlql462iO2uQBdVDtM5k0LnKNP_WwpjY",
+          "value": "YOUR_GOOGLE_SHEET_ID",
           "mode": "list",
           "cachedResultName": "TE_Sales_Opportunity_Document_Log",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dke-q-4Uh8iwlql462iO2uQBdVDtM5k0LnKNP_WwpjY/edit?usp=drivesdk"
+          "cachedResultUrl": ""
         },
         "sheetName": {
           "__rl": true,
           "value": 228710658,
           "mode": "list",
           "cachedResultName": "Customer Request Log",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dke-q-4Uh8iwlql462iO2uQBdVDtM5k0LnKNP_WwpjY/edit#gid=228710658"
+          "cachedResultUrl": ""
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -484,7 +484,7 @@
     },
     {
       "parameters": {
-        "sendTo": "alex77tishka@gmail.com",
+        "sendTo": "YOUR_NOTIFICATION_EMAIL@example.com",
         "subject": "=URGENT: {{ $('Upload file2').item.json.name }}",
         "emailType": "text",
         "message": "=UCUSTOMER REQUEST PROCESSED<br><br>\n\n<b>Customer:</b><br>\n{{ $('Information Extractor').item.json.output.customer }}<br><br>\n\n<b>End Customer:</b><br>\n{{ $('Information Extractor').item.json.output.end_customer }}<br><br>\n\n<b>Project / Program:</b><br>\n{{ $('Information Extractor').item.json.output.project_or_program }}<br><br>\n\n<b>Request Type:</b><br>\n{{ $('Information Extractor').item.json.output.request_type }}<br><br>\n\n<b>TE Part Number:</b><br>\n{{ $('Information Extractor').item.json.output.te_part_numbers }}<br><br>\n\n<b>Summary:</b><br>\n{{ $('Information Extractor').item.json.output.summary }}<br><br>\n\n<b>Requested Action:</b><br>\n{{ $('Information Extractor').item.json.output.requested_action }}<br><br>\n\n<b>Responsible Team:</b><br>\n{{ $('Information Extractor').item.json.output.responsible_team }}<br><br>\n\n<b>Urgency:</b><br>\n{{ $('Information Extractor').item.json.output.urgency }}<br><br>\n\n<b>File Name:</b><br>\n{{ $('Upload file2').item.json.name }}",
@@ -508,7 +508,7 @@
     },
     {
       "parameters": {
-        "sendTo": "alex77tishka@gmail.com",
+        "sendTo": "YOUR_NOTIFICATION_EMAIL@example.com",
         "subject": "={{ $('Upload file2').item.json.name }}",
         "message": "=CUSTOMER REQUEST PROCESSED<br><br>\n\n<b>Customer:</b><br>\n{{ $('Information Extractor').item.json.output.customer }}<br><br>\n\n<b>End Customer:</b><br>\n{{ $('Information Extractor').item.json.output.end_customer }}<br><br>\n\n<b>Project / Program:</b><br>\n{{ $('Information Extractor').item.json.output.project_or_program }}<br><br>\n\n<b>Request Type:</b><br>\n{{ $('Information Extractor').item.json.output.request_type }}<br><br>\n\n<b>TE Part Number:</b><br>\n{{ $('Information Extractor').item.json.output.te_part_numbers }}<br><br>\n\n<b>Summary:</b><br>\n{{ $('Information Extractor').item.json.output.summary }}<br><br>\n\n<b>Requested Action:</b><br>\n{{ $('Information Extractor').item.json.output.requested_action }}<br><br>\n\n<b>Responsible Team:</b><br>\n{{ $('Information Extractor').item.json.output.responsible_team }}<br><br>\n\n<b>Urgency:</b><br>\n{{ $('Information Extractor').item.json.output.urgency }}<br><br>\n\n<b>File Name:</b><br>\n{{ $('Upload file2').item.json.name }}",
         "options": {}
@@ -692,10 +692,10 @@
         },
         "folderId": {
           "__rl": true,
-          "value": "1_5IEX9tn3xQsmCXYzxa7gQ26UWEdmpUJ",
+          "value": "YOUR_GOOGLE_DRIVE_FOLDER_ID",
           "mode": "list",
           "cachedResultName": "Processed documents",
-          "cachedResultUrl": "https://drive.google.com/drive/folders/1_5IEX9tn3xQsmCXYzxa7gQ26UWEdmpUJ"
+          "cachedResultUrl": ""
         },
         "options": {}
       },

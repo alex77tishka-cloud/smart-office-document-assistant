@@ -24,6 +24,12 @@ const STAGES = [
   'Almost done…',
 ]
 
+// "PDF, DOCX and TXT", built from the single accepted-type list.
+const TYPE_NAMES = ACCEPTED_FILE_TYPES.map((type) =>
+  type.extension.slice(1).toUpperCase(),
+)
+const SUPPORTED_TYPES_TEXT = `${TYPE_NAMES.slice(0, -1).join(', ')} and ${TYPE_NAMES.at(-1)}`
+
 export default function Upload({ onProcessed, onGoToDashboard }) {
   const [file, setFile] = useState(null)
   const [dragging, setDragging] = useState(false)
@@ -157,10 +163,9 @@ export default function Upload({ onProcessed, onGoToDashboard }) {
             />
           </div>
 
-          {UNVERIFIED_TYPE_LABELS.length > 0 ? (
+          {UNVERIFIED_TYPE_LABELS.length === 0 ? (
             <p className="inline-note">
-              {UNVERIFIED_TYPE_LABELS.join(' and ')} processing is still being
-              validated end to end. PDF is fully verified.
+              {SUPPORTED_TYPES_TEXT} are supported and verified end-to-end.
             </p>
           ) : null}
 
