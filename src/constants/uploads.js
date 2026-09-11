@@ -26,8 +26,13 @@ export const ACCEPTED_FILE_TYPES = [
   },
 ]
 
+// Extensions only: `.pdf,.docx,.txt`. The native picker filters by extension,
+// and listing each type a second time as a MIME type lets browsers build
+// overlapping filters from the mix, which can leave only the first type
+// selectable. MIME types are still checked by matchAcceptedType below, which is
+// what actually accepts or rejects a file — the picker is only a convenience.
 export const ACCEPT_ATTRIBUTE = ACCEPTED_FILE_TYPES.map(
-  (type) => `${type.extension},${type.mimeType}`,
+  (type) => type.extension,
 ).join(',')
 
 export const UNVERIFIED_TYPE_LABELS = ACCEPTED_FILE_TYPES.filter(

@@ -1,0 +1,1284 @@
+{
+  "name": "TE Sales Document Assistant - Workflow A - Process Document API",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -944,
+        96
+      ],
+      "id": "c723a0fd-bd28-4ac9-9660-671a28d908db",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.text }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "customer",
+              "description": "Direct customer or company. Return Not found if missing.",
+              "required": true
+            },
+            {
+              "name": "end_customer",
+              "description": "End customer such as IAI, ELTA or Boeing. Return Not found if missing.",
+              "required": true
+            },
+            {
+              "name": "project_or_program",
+              "description": "Project or program name. Return Not found if missing.",
+              "required": true
+            },
+            {
+              "name": "te_part_numbers",
+              "description": "Extract TE part numbers exactly as written.",
+              "required": true
+            },
+            {
+              "name": "requested_action",
+              "description": "Required action from TE.",
+              "required": true
+            },
+            {
+              "name": "strategic_opportunity",
+              "description": "Choose exactly one value: Yes or No. Use Yes only when the document indicates a strategic program, significant forecast, competitor replacement, design-in opportunity, or long-term sales potential.",
+              "required": true
+            },
+            {
+              "name": "summary",
+              "description": "Summarize the document in no more than three short factual sentences. Include the customer request, relevant product or part number, and main business need. Do not invent missing information.",
+              "required": true
+            },
+            {
+              "name": "request_type",
+              "description": "Choose exactly one value: RFQ, Price Request, Lead Time Request, Technical Request, Alternative Product Request, Sample Request, Quality Complaint, Delivery Complaint, Forecast, Contract Review, Internal Report, or Other.",
+              "required": true
+            },
+            {
+              "name": "quantity",
+              "description": "Extract the requested quantity exactly as written, including the unit. Return \"Not found\" if no quantity appears.",
+              "required": true
+            },
+            {
+              "name": "response_deadline",
+              "description": "Extract the deadline for TE to provide a quotation, answer, confirmation, or technical response. Return it exactly as written. Return \"Not found\" if no response deadline appears.",
+              "required": true
+            },
+            {
+              "name": "urgency",
+              "description": "Choose exactly one value: Low, Medium, or High.  Use High only when there is an immediate deadline, production stop, delivery risk, serious quality issue, legal or compliance risk, or a clear risk of losing strategic business.  Use Medium when action is required but there is no immediate risk. Use Low for general information, forecasts, or requests without a deadline.",
+              "required": true
+            },
+            {
+              "name": "competitor_part_numbers",
+              "description": "Extract all competitor part numbers exactly as written. Return \"Not found\" if none appear.",
+              "required": true
+            },
+            {
+              "name": "product_family",
+              "description": "Choose exactly one value: DMC-M, Circular Connectors, Relays, Wires and Cables, Backshells, Fiber Optics, RF / Coax, Heat Shrink, or Other.",
+              "required": true
+            },
+            {
+              "name": "target_price",
+              "description": "Extract the target price, requested price, or quoted price exactly as written, including currency and unit. Return \"Not found\" if no price appears.",
+              "required": true
+            },
+            {
+              "name": "required_delivery",
+              "description": "Extract the requested delivery date or delivery period exactly as written. Return \"Not found\" if no required delivery is stated.",
+              "required": true
+            },
+            {
+              "name": "competitor",
+              "description": "Identify any competitor mentioned in the document, such as Amphenol, Glenair, Leach, or Smiths Interconnect. Return \"Not found\" if no competitor is mentioned.",
+              "required": true
+            },
+            {
+              "name": "responsible_team",
+              "description": "Choose exactly one value: Sales, Pricing, Product Management, Engineering, Customer Service, Operations, Quality, Legal, Trade Compliance, or General."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        -768,
+        96
+      ],
+      "id": "898abd04-693b-4b45-93a4-fd4ba742cca5",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -768,
+        432
+      ],
+      "id": "6f82b157-fbdc-457f-958c-9d9b22f3bba8",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "gHJ8BOidse28JrHI",
+          "name": "OpenAI account 38"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1dke-q-4Uh8iwlql462iO2uQBdVDtM5k0LnKNP_WwpjY",
+          "mode": "list",
+          "cachedResultName": "TE_Sales_Opportunity_Document_Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dke-q-4Uh8iwlql462iO2uQBdVDtM5k0LnKNP_WwpjY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 228710658,
+          "mode": "list",
+          "cachedResultName": "Customer Request Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dke-q-4Uh8iwlql462iO2uQBdVDtM5k0LnKNP_WwpjY/edit#gid=228710658"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Received At": "={{ $now }}",
+            "Customer": "={{ $('Information Extractor').item.json.output.customer }}",
+            "End Customer": "={{ $('Information Extractor').item.json.output.end_customer }}",
+            "Project / Program": "={{ $('Information Extractor').item.json.output.project_or_program }}",
+            "Request Type": "={{ $('Information Extractor').item.json.output.request_type }}",
+            "TE Part Number(s)": "={{ $('Information Extractor').item.json.output.te_part_numbers }}",
+            "Competitor Part Number(s)": "={{ $('Information Extractor').item.json.output.competitor_part_numbers }}",
+            "Product Family": "={{ $('Information Extractor').item.json.output.product_family }}",
+            "Quantity": "={{ $('Information Extractor').item.json.output.quantity }}",
+            "Target Price": "={{ $('Information Extractor').item.json.output.target_price }}",
+            "Required Delivery": "={{ $('Information Extractor').item.json.output.required_delivery }}",
+            "Response Deadline": "={{ $('Information Extractor').item.json.output.response_deadline }}",
+            "Competitor": "={{ $('Information Extractor').item.json.output.competitor }}",
+            "Summary": "={{ $('Information Extractor').item.json.output.summary }}",
+            "Requested Action": "=\n{{ $('Information Extractor').item.json.output.requested_action }}",
+            "Responsible Team": "={{ $('Information Extractor').item.json.output.responsible_team }}",
+            "Urgency": "={{ $('Information Extractor').item.json.output.urgency }}",
+            "Strategic Opportunity": "={{ $('Information Extractor').item.json.output.strategic_opportunity }}",
+            "File Name": "={{ $json.name }}",
+            "File Link": "={{ $json.webViewLink }}",
+            "Status": "={{ $json.status }}",
+            "Document ID": "={{ $json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Received At",
+              "displayName": "Received At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Customer",
+              "displayName": "Customer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "End Customer",
+              "displayName": "End Customer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Project / Program",
+              "displayName": "Project / Program",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Request Type",
+              "displayName": "Request Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "TE Part Number(s)",
+              "displayName": "TE Part Number(s)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Competitor Part Number(s)",
+              "displayName": "Competitor Part Number(s)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Product Family",
+              "displayName": "Product Family",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Quantity",
+              "displayName": "Quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Target Price",
+              "displayName": "Target Price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Required Delivery",
+              "displayName": "Required Delivery",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Response Deadline",
+              "displayName": "Response Deadline",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Competitor",
+              "displayName": "Competitor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Requested Action",
+              "displayName": "Requested Action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Responsible Team",
+              "displayName": "Responsible Team",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Urgency",
+              "displayName": "Urgency",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Strategic Opportunity",
+              "displayName": "Strategic Opportunity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "File Name",
+              "displayName": "File Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "File Link",
+              "displayName": "File Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Document ID",
+              "displayName": "Document ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Reviewed By",
+              "displayName": "Reviewed By",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Review Note",
+              "displayName": "Review Note",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -112,
+        240
+      ],
+      "id": "44164611-5bab-4165-99ae-80e427cf9995",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "aTskcFwrVVdn0lb1",
+          "name": "Google Sheets account 20"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c4264614-7c56-4975-98a2-ae22ab630662",
+              "leftValue": "={{ $('Information Extractor').item.json.output.urgency }}",
+              "rightValue": "High",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        96,
+        208
+      ],
+      "id": "1c9a88a6-011a-498e-81c9-9015919cfa7b",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "alex77tishka@gmail.com",
+        "subject": "=URGENT: {{ $('Upload file2').item.json.name }}",
+        "emailType": "text",
+        "message": "=UCUSTOMER REQUEST PROCESSED<br><br>\n\n<b>Customer:</b><br>\n{{ $('Information Extractor').item.json.output.customer }}<br><br>\n\n<b>End Customer:</b><br>\n{{ $('Information Extractor').item.json.output.end_customer }}<br><br>\n\n<b>Project / Program:</b><br>\n{{ $('Information Extractor').item.json.output.project_or_program }}<br><br>\n\n<b>Request Type:</b><br>\n{{ $('Information Extractor').item.json.output.request_type }}<br><br>\n\n<b>TE Part Number:</b><br>\n{{ $('Information Extractor').item.json.output.te_part_numbers }}<br><br>\n\n<b>Summary:</b><br>\n{{ $('Information Extractor').item.json.output.summary }}<br><br>\n\n<b>Requested Action:</b><br>\n{{ $('Information Extractor').item.json.output.requested_action }}<br><br>\n\n<b>Responsible Team:</b><br>\n{{ $('Information Extractor').item.json.output.responsible_team }}<br><br>\n\n<b>Urgency:</b><br>\n{{ $('Information Extractor').item.json.output.urgency }}<br><br>\n\n<b>File Name:</b><br>\n{{ $('Upload file2').item.json.name }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        288,
+        -16
+      ],
+      "id": "df889bc8-0b53-4ef2-a738-20cf06262f57",
+      "name": "Urgent",
+      "webhookId": "d97e902c-5606-4ca5-93da-d13a5ff3635b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "2SN5fGkMjoXC9Pjo",
+          "name": "Gmail account 17"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "alex77tishka@gmail.com",
+        "subject": "={{ $('Upload file2').item.json.name }}",
+        "message": "=CUSTOMER REQUEST PROCESSED<br><br>\n\n<b>Customer:</b><br>\n{{ $('Information Extractor').item.json.output.customer }}<br><br>\n\n<b>End Customer:</b><br>\n{{ $('Information Extractor').item.json.output.end_customer }}<br><br>\n\n<b>Project / Program:</b><br>\n{{ $('Information Extractor').item.json.output.project_or_program }}<br><br>\n\n<b>Request Type:</b><br>\n{{ $('Information Extractor').item.json.output.request_type }}<br><br>\n\n<b>TE Part Number:</b><br>\n{{ $('Information Extractor').item.json.output.te_part_numbers }}<br><br>\n\n<b>Summary:</b><br>\n{{ $('Information Extractor').item.json.output.summary }}<br><br>\n\n<b>Requested Action:</b><br>\n{{ $('Information Extractor').item.json.output.requested_action }}<br><br>\n\n<b>Responsible Team:</b><br>\n{{ $('Information Extractor').item.json.output.responsible_team }}<br><br>\n\n<b>Urgency:</b><br>\n{{ $('Information Extractor').item.json.output.urgency }}<br><br>\n\n<b>File Name:</b><br>\n{{ $('Upload file2').item.json.name }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        288,
+        240
+      ],
+      "id": "f0df16ee-f48e-4989-b32a-d6c1e7ba6f88",
+      "name": "Normal",
+      "webhookId": "941dda1a-cbbb-44e6-8116-80582561bf98",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "2SN5fGkMjoXC9Pjo",
+          "name": "Gmail account 17"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "17b42891-5a2c-486b-9c7d-89fdea064e2a",
+              "leftValue": "={{ $('Information Extractor').item.json.output.customer }}",
+              "rightValue": "Not found",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "2fcaa33c-18e9-4a46-87ab-bf2be3de5d5c",
+              "leftValue": "={{ $('Information Extractor').item.json.output.request_type }}",
+              "rightValue": "Other",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "7fbc9f0d-89a5-4a6c-a5ec-b2bf1d5ae233",
+              "leftValue": "={{ $('Information Extractor').item.json.output.summary }}",
+              "rightValue": "Not found",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "417bb799-dcd7-4ad4-8f56-1afda75e4bdc",
+              "leftValue": "={{ $('Information Extractor').item.json.output.requested_action }}",
+              "rightValue": "No action found",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -592,
+        432
+      ],
+      "id": "aee56971-3ebb-4c3c-8531-618fc74facd7",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6b4b41fa-38dd-4f07-a3da-52797a20881a",
+              "name": "status",
+              "value": "Needs Review",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -416,
+        272
+      ],
+      "id": "519942ee-132b-4082-b45f-8d5378dd6660",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3165b6a1-489e-4d35-88c7-f33798d87bdd",
+              "name": "status",
+              "value": "Processed",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -416,
+        480
+      ],
+      "id": "1ed6d0e7-c705-48fe-95dc-fc9c1d7bde3f",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "process-document-v2",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1552,
+        96
+      ],
+      "id": "91e15270-939f-4059-b3e4-3fe6dbb77692",
+      "name": "Webhook1",
+      "webhookId": "41ddb61a-59ae-481c-8291-fffd574860a2",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "IGjj29VCmpBHScCG",
+          "name": "Header Auth account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "body.file_base64",
+        "options": {
+          "fileName": "={{ $json.body.file_name }}",
+          "mimeType": "={{ $json.body.mime_type }}"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -1376,
+        96
+      ],
+      "id": "04411d04-e90a-4489-a534-0a0d4d6ff2de",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "name": "={{ $binary.data.fileName }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1_5IEX9tn3xQsmCXYzxa7gQ26UWEdmpUJ",
+          "mode": "list",
+          "cachedResultName": "Processed documents",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1_5IEX9tn3xQsmCXYzxa7gQ26UWEdmpUJ"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1248,
+        -224
+      ],
+      "id": "8a78da0d-17cb-4d29-af96-c99641daf51f",
+      "name": "Upload file2",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "m9CgyG2xyOMT8n2z",
+          "name": "Google Drive account 9"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -112,
+        -240
+      ],
+      "id": "16b773d8-0f61-46c0-92f0-a38b3a0c33b9",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{\n{\n  \"status\": \"processed\",\n  \"document_id\": $('Upload file2').item.json.id,\n  \"file_name\": $('Upload file2').item.json.name,\n  \"file_link\": $('Upload file2').item.json.webViewLink,\n  \"received_at\": $('Append row in sheet').item.json[\"Received At\"],\n  \"fields\": {\n    \"customer\": $('Information Extractor').item.json.output.customer,\n    \"end_customer\": $('Information Extractor').item.json.output.end_customer,\n    \"project_or_program\": $('Information Extractor').item.json.output.project_or_program,\n    \"request_type\": $('Information Extractor').item.json.output.request_type,\n    \"te_part_numbers\": $('Information Extractor').item.json.output.te_part_numbers,\n    \"competitor_part_numbers\": $('Information Extractor').item.json.output.competitor_part_numbers,\n    \"product_family\": $('Information Extractor').item.json.output.product_family,\n    \"quantity\": $('Information Extractor').item.json.output.quantity,\n    \"target_price\": $('Information Extractor').item.json.output.target_price,\n    \"required_delivery\": $('Information Extractor').item.json.output.required_delivery,\n    \"response_deadline\": $('Information Extractor').item.json.output.response_deadline,\n    \"competitor\": $('Information Extractor').item.json.output.competitor,\n    \"summary\": $('Information Extractor').item.json.output.summary,\n    \"requested_action\": $('Information Extractor').item.json.output.requested_action,\n    \"responsible_team\": $('Information Extractor').item.json.output.responsible_team,\n    \"urgency\": $('Information Extractor').item.json.output.urgency,\n    \"strategic_opportunity\": $('Information Extractor').item.json.output.strategic_opportunity\n  },\n  \"notification_sent\": true\n}\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        464,
+        -16
+      ],
+      "id": "f261967f-7b71-47b0-827c-503bd0f0e7ff",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{\n{\n  \"status\": \"processed\",\n  \"document_id\": $('Upload file2').item.json.id,\n  \"file_name\": $('Upload file2').item.json.name,\n  \"file_link\": $('Upload file2').item.json.webViewLink,\n  \"received_at\": $('Append row in sheet').item.json[\"Received At\"],\n  \"fields\": {\n    \"customer\": $('Information Extractor').item.json.output.customer,\n    \"end_customer\": $('Information Extractor').item.json.output.end_customer,\n    \"project_or_program\": $('Information Extractor').item.json.output.project_or_program,\n    \"request_type\": $('Information Extractor').item.json.output.request_type,\n    \"te_part_numbers\": $('Information Extractor').item.json.output.te_part_numbers,\n    \"competitor_part_numbers\": $('Information Extractor').item.json.output.competitor_part_numbers,\n    \"product_family\": $('Information Extractor').item.json.output.product_family,\n    \"quantity\": $('Information Extractor').item.json.output.quantity,\n    \"target_price\": $('Information Extractor').item.json.output.target_price,\n    \"required_delivery\": $('Information Extractor').item.json.output.required_delivery,\n    \"response_deadline\": $('Information Extractor').item.json.output.response_deadline,\n    \"competitor\": $('Information Extractor').item.json.output.competitor,\n    \"summary\": $('Information Extractor').item.json.output.summary,\n    \"requested_action\": $('Information Extractor').item.json.output.requested_action,\n    \"responsible_team\": $('Information Extractor').item.json.output.responsible_team,\n    \"urgency\": $('Information Extractor').item.json.output.urgency,\n    \"strategic_opportunity\": $('Information Extractor').item.json.output.strategic_opportunity\n  },\n  \"notification_sent\": true\n}\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        480,
+        240
+      ],
+      "id": "cc576518-4058-4a5d-a90a-23742e2f1c97",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $binary.data.mimeType }}",
+                    "rightValue": "application/pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "b42281d1-0180-4130-aaa2-4c2360126575"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PDF"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "52a802b8-bf42-458a-99c1-43d40929e0d7",
+                    "leftValue": "={{ $binary.data.mimeType }}",
+                    "rightValue": "text/plain",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "TXT"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "21263976-2740-444e-b7af-8462ea1863ee",
+                    "leftValue": "={{ $binary.data.mimeType }}",
+                    "rightValue": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "DOCX"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -1184,
+        96
+      ],
+      "id": "32489a3e-89b7-4e32-b904-7d3d70171f15",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "destinationKey": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -1072,
+        -112
+      ],
+      "id": "d2cd604d-ddbe-4f99-8c5b-9e1e60af5b25",
+      "name": "Extract TXT"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.googleapis.com/upload/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "uploadType",
+              "value": "resumable"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Upload-Content-Type",
+              "value": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ $binary.data.fileName.replace(/\\.docx$/i, '') }}"
+            },
+            {
+              "name": "mimeType",
+              "value": "application/vnd.google-apps.document"
+            }
+          ]
+        },
+        "options": {
+          "lowercaseHeaders": true,
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -1392,
+        528
+      ],
+      "id": "25c4e59c-c41b-4477-8d6e-4d01afc9316a",
+      "name": "Start DOCX Conversion",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "m9CgyG2xyOMT8n2z",
+          "name": "Google Drive account 9"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -1136,
+        544
+      ],
+      "id": "7361f9ff-c0e1-4c81-b3f7-669b0c7c3114",
+      "name": "Merge DOCX"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $json.headers.location }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -1392,
+        800
+      ],
+      "id": "826ed93c-ffac-449f-8173-15301b6f85cd",
+      "name": "Upload DOCX Content"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.googleapis.com/drive/v3/files/{{ $json.id }}/export",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "mimeType",
+              "value": "text/plain"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "text"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -976,
+        800
+      ],
+      "id": "af942885-53e1-42de-a953-98383263d556",
+      "name": "Export DOCX as Text",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "m9CgyG2xyOMT8n2z",
+          "name": "Google Drive account 9"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Urgent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Normal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Urgent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normal": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Upload file2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extract TXT",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge DOCX",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Start DOCX Conversion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract TXT": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start DOCX Conversion": {
+      "main": [
+        [
+          {
+            "node": "Merge DOCX",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge DOCX": {
+      "main": [
+        [
+          {
+            "node": "Upload DOCX Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload DOCX Content": {
+      "main": [
+        [
+          {
+            "node": "Export DOCX as Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Export DOCX as Text": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "40cb7359-003e-4691-86a4-444ed2c86a1a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9a7e80d5d634c03304165d9eb50d45c51144a4d18b6aec140de8af0f68fc5038"
+  },
+  "nodeGroups": [],
+  "id": "rhNnpVbytWiCnAdK",
+  "tags": []
+}
