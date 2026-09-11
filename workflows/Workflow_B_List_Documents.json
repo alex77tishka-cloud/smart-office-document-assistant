@@ -1,0 +1,150 @@
+{
+  "name": "‏TE Sales Document Assistant – Workflow B – List Documents",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "documents",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -304,
+        -64
+      ],
+      "id": "13f33cca-9718-4458-9185-53bcd5380f03",
+      "name": "Webhook",
+      "webhookId": "9156d59f-57c5-46fc-9b68-e2da9fcf1170",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "IGjj29VCmpBHScCG",
+          "name": "Header Auth account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1dke-q-4Uh8iwlql462iO2uQBdVDtM5k0LnKNP_WwpjY",
+          "mode": "list",
+          "cachedResultName": "TE_Sales_Opportunity_Document_Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dke-q-4Uh8iwlql462iO2uQBdVDtM5k0LnKNP_WwpjY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 228710658,
+          "mode": "list",
+          "cachedResultName": "Customer Request Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dke-q-4Uh8iwlql462iO2uQBdVDtM5k0LnKNP_WwpjY/edit#gid=228710658"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -80,
+        -64
+      ],
+      "id": "50c1bece-290e-4756-9f78-4406f205bfb7",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "aTskcFwrVVdn0lb1",
+          "name": "Google Sheets account 20"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        352,
+        -64
+      ],
+      "id": "12ddefe6-e5e8-4b1c-9647-f2b55abfa27d",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "row_number",
+              "order": "descending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        144,
+        -64
+      ],
+      "id": "25ed7170-b309-4091-b8a9-f3a1c283fd82",
+      "name": "Sort"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    },
+    "Sort": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "952c2267-2d1b-4208-b1f5-8731ede11040",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9a7e80d5d634c03304165d9eb50d45c51144a4d18b6aec140de8af0f68fc5038"
+  },
+  "nodeGroups": [],
+  "id": "5vUmMYOw610an1Rz",
+  "tags": []
+}
