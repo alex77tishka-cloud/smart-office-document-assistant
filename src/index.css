@@ -1,0 +1,111 @@
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #f1f3f6;
+  --border: #dfe3e9;
+  --border-strong: #c8cfd8;
+  --text: #1c2430;
+  --text-muted: #626f80;
+  --text-faint: #8a95a3;
+  --accent: #1d5fd0;
+  --accent-soft: rgba(29, 95, 208, 0.1);
+  --high: #a3242c;
+  --high-bg: rgba(191, 46, 55, 0.12);
+  --medium: #8a5b0a;
+  --medium-bg: rgba(196, 132, 22, 0.16);
+  --low: #2f6b4a;
+  --low-bg: rgba(52, 137, 92, 0.14);
+  --done: #2f6b4a;
+  --done-bg: rgba(52, 137, 92, 0.14);
+  --pending: #7a5410;
+  --pending-bg: rgba(196, 132, 22, 0.14);
+  --danger: #a3242c;
+  --danger-bg: rgba(191, 46, 55, 0.08);
+  --radius: 8px;
+  --sans: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Consolas, monospace;
+
+  font: 15px/1.5 var(--sans);
+  color: var(--text);
+  background: var(--bg);
+  color-scheme: light dark;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14171c;
+    --surface: #1b1f26;
+    --surface-2: #232830;
+    --border: #2e343e;
+    --border-strong: #3d4550;
+    --text: #e6eaf0;
+    --text-muted: #9aa5b4;
+    --text-faint: #7b8695;
+    --accent: #6ea2ff;
+    --accent-soft: rgba(110, 162, 255, 0.14);
+    --high: #ff9a9f;
+    --high-bg: rgba(255, 106, 114, 0.16);
+    --medium: #f0c069;
+    --medium-bg: rgba(232, 175, 74, 0.16);
+    --low: #85d3a6;
+    --low-bg: rgba(96, 196, 141, 0.14);
+    --done: #85d3a6;
+    --done-bg: rgba(96, 196, 141, 0.14);
+    --pending: #f0c069;
+    --pending-bg: rgba(232, 175, 74, 0.14);
+    --danger: #ff9a9f;
+    --danger-bg: rgba(255, 106, 114, 0.1);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+h1,
+h2,
+h3 {
+  color: var(--text);
+  margin: 0;
+  line-height: 1.25;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--accent);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
