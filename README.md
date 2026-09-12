@@ -107,17 +107,27 @@ Fill in `.env`:
 | `MAX_REQUEST_BODY` | Maximum JSON body the proxy accepts (default `20mb`). |
 | `VITE_USE_MOCKS` | `false` to use n8n through the proxy; `true` for offline mock data. |
 
-The frontend and proxy run as two separate processes:
+The frontend and proxy can be started together with one command:
 
 ```bash
-# Terminal 1: Express proxy on http://localhost:3001
-npm run server
-
-# Terminal 2: Vite dev server on http://localhost:5173
-npm run dev
+npm run start
 ```
 
-Open http://localhost:5173. In development Vite forwards `/api` to the proxy, so the browser sees a single origin.
+This starts:
+- Express proxy on http://localhost:3001
+- Vite development server on http://localhost:5173
+
+Open http://localhost:5173 in the browser. In development Vite forwards `/api` to the proxy, so the browser sees a single origin.
+
+For development, the two processes can also be started separately:
+
+```bash
+# Terminal 1: Express proxy
+npm run server
+
+# Terminal 2: Vite development server
+npm run dev
+```
 
 Other scripts: `npm run lint`, `npm run build`.
 
