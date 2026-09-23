@@ -1,6 +1,17 @@
 # Smart Office Document Assistant
 
 A web application that wraps an existing n8n document automation. Sales documents (RFQs, technical enquiries, sample requests) are uploaded in the browser, processed by n8n, and tracked and reviewed from a single dashboard.
+## Live Deployment
+
+The application is deployed on Render and can be accessed here:
+
+https://smart-office-document-assistant.onrender.com
+
+Note: the application depends on the connected n8n workflows. If the n8n service is unavailable or has reached its usage limit, the UI will still load but backend operations may return an error.
+
+
+
+
 
 The application is deliberately thin. It does no AI, urgency scoring or notification logic of its own; every business decision belongs to n8n.
 
